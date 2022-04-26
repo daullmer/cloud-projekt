@@ -13,21 +13,17 @@ import { VisionApiModel } from './types';
 
 export class AppComponent implements OnInit{
   title = 'cloud-projekt';
-  faceInfo: VisionApiModel = {} as VisionApiModel;
+  faceInfo!: VisionApiModel;
   ImageBaseData:string | ArrayBuffer | null = null;
-  
+
   constructor(private http: HttpClient) { }
 
-  click() {
-    this.title += "Hallo";
-    console.log("TEst button");
-  }
  // toggle webcam on/off
  public showWebcam = true;
  public deviceId: string = "";
  public videoOptions: MediaTrackConstraints = {
-   // width: {ideal: 1024},
-   // height: {ideal: 576}
+   width: {ideal: 1440},
+   height: {ideal: 960}
  };
  public errors: WebcamInitError[] = [];
 
@@ -44,7 +40,6 @@ export class AppComponent implements OnInit{
 
  public triggerSnapshot(): void {
    this.trigger.next();
-   console.log("hallo ich hab ein Bild gemacht");
  }
 
  public toggleWebcam(): void {
@@ -69,7 +64,7 @@ export class AppComponent implements OnInit{
       'Authorization': 'Basic ' + btoa('dhbw-demo:dhbw-demo')
     })
   };
-  
+
   this.http.post<any>('http://cloud-backend.dullmer.de/Analyze', imageBase64, httpOptions).subscribe(data => {
     if (data.length == 0) {
       console.log("Kein Gesicht gefunden!");
@@ -98,20 +93,20 @@ export class AppComponent implements OnInit{
     };
  }
  public btnUpload(){
-    
+
     if(this.ImageBaseData==null){
       alert("Please select file");
-    }else{     
+    }else{
       var fileUplodVM: FileUplodVM={
         ImageBaseData:this.ImageBaseData.toString()
       }
-      this.CreateItem(fileUplodVM).subscribe((res: any) =>{ 
+      this.CreateItem(fileUplodVM).subscribe((res: any) =>{
         if(res){
           alert("Successfully uploded file");
         }else{
           alert("File upload failed");
         }
-        
+
       },
       error => {
         alert(error.message);
