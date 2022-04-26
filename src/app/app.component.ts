@@ -1,6 +1,9 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import {Subject, Observable} from 'rxjs';
 import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { VisionApiModel } from './types';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +13,10 @@ import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
 
 export class AppComponent implements OnInit{
   title = 'cloud-projekt';
+  faceInfo: VisionApiModel = {} as VisionApiModel;
+  ImageBaseData:string | ArrayBuffer | null = null;
+  
+  constructor(private http: HttpClient) { }
 
   click() {
     this.title += "Hallo";
@@ -52,10 +59,24 @@ export class AppComponent implements OnInit{
  public handleImage(webcamImage: WebcamImage): void {
    console.info('received webcam image', webcamImage);
    this.webcamImage = webcamImage;
+   this.uploadToAPI(webcamImage.imageAsBase64);
  }
 
- public uploadToAPI(): void {
+ public uploadToAPI(imageBase64: string): void {
 
+  const httpOptions = {
+    headers: new HttpHeaders({
+      'Authorization': 'Basic ' + btoa('dhbw-demo:dhbw-demo')
+    })
+  };
+  
+  this.http.post<any>('http://cloud-backend.dullmer.de/Analyze', imageBase64, httpOptions).subscribe(data => {
+    if (data.length == 0) {
+      console.log("Kein Gesicht gefunden!");
+      return;
+    }
+    this.faceInfo = data[0];
+  })
  }
 
 
@@ -63,6 +84,52 @@ export class AppComponent implements OnInit{
    return this.trigger.asObservable();
  }
 
-
+ public handleFileInput(event: any) {
+    const file: File = event.target.files[0];
+    let me = this;
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      console.log(reader.result);
+      me.ImageBaseData=reader.result;
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+ }
+ public btnUpload(){
+    
+    if(this.ImageBaseData==null){
+      alert("Please select file");
+    }else{     
+      var fileUplodVM: FileUplodVM={
+        ImageBaseData:this.ImageBaseData.toString()
+      }
+      this.CreateItem(fileUplodVM).subscribe((res: any) =>{ 
+        if(res){
+          alert("Successfully uploded file");
+        }else{
+          alert("File upload failed");
+        }
+        
+      },
+      error => {
+        alert(error.message);
+      });
+    }
+  }
+  public CreateItem(data: any) {
+	return this.http.post(`http://localhost:52410/api/Order/UploadFile`, data)
+	 .pipe(
+	   map((res: any) => {
+		 console.log(res);
+		 return res;
+	   }));
+   }
 }
+  export class FileUplodVM{
+	  ImageBaseData: string = "";
+  }
+
+
 
