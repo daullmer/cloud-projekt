@@ -32,9 +32,9 @@
     </div>
   </div>
   <h2 *ngIf="webcamImage.imageAsDataUrl" style="text-align: center;">Nice one!</h2>
-  <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="space-around">
-    <img *ngIf="webcamImage" class="snapshot" maxwidth="100px" [src]="webcamImage.imageAsDataUrl" />
-    <app-ai-result *ngIf="faceInfo" [result]="faceInfo"></app-ai-result>
+  <div fxLayout="row" fxLayout.lt-lg="column" fxLayout.lt-lg="center center" fxLayoutAlign="space-around">
+    <img *ngIf="webcamImage" class="snapshot"[src]="webcamImage.imageAsDataUrl" style="object-fit: contain;"/>
+    <app-ai-result [result]="faceInfo" [loading]="loading"></app-ai-result>
   </div>
   <h4 *ngIf="errors.length > 0">Fehler:</h4>
   <ul *ngFor="let error of errors">

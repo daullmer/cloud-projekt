@@ -15,6 +15,7 @@ export class AppComponent implements OnInit{
   title = 'cloud-projekt';
   faceInfo!: VisionApiModel;
   ImageBaseData:string | ArrayBuffer | null = null;
+  loading: boolean = false;
 
   constructor(private http: HttpClient) { }
 
@@ -65,11 +66,14 @@ export class AppComponent implements OnInit{
     })
   };
 
-  this.http.post<any>('http://cloud-backend.dullmer.de/Analyze', imageBase64, httpOptions).subscribe(data => {
+  this.loading = true;
+
+  this.http.post<any>('https://cloud-backend.dullmer.de/Analyze', imageBase64, httpOptions).subscribe(data => {
     if (data.length == 0) {
       console.log("Kein Gesicht gefunden!");
       return;
     }
+    this.loading = false;
     this.faceInfo = data[0];
   })
  }

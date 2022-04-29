@@ -8,6 +8,7 @@ import { HairColor, VisionApiModel } from '../types';
 })
 export class AiResultComponent implements OnInit {
   @Input() result!: VisionApiModel;
+  @Input() loading: boolean = false;
 
   constructor() {}
 

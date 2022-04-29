@@ -9,6 +9,8 @@ import {FormsModule} from '@angular/forms';
 import { AiResultComponent } from './ai-result/ai-result.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     FormsModule,
     AppRoutingModule,
     WebcamModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatProgressSpinnerModule,
+    BrowserAnimationsModule
   ],
   providers: [HttpClientModule],
   bootstrap: [AppComponent]
