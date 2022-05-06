@@ -1,7 +1,7 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import {Subject, Observable} from 'rxjs';
 import {WebcamImage, WebcamInitError, WebcamUtil} from 'ngx-webcam';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaderResponse, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { VisionApiModel } from './types';
 
@@ -16,6 +16,8 @@ export class AppComponent implements OnInit{
   faceInfo!: VisionApiModel;
   ImageBaseData:string | ArrayBuffer | null = null;
   loading: boolean = false;
+
+  pastImages: object[] = []
 
   constructor(private http: HttpClient) { }
 
@@ -35,8 +37,9 @@ export class AppComponent implements OnInit{
  private trigger: Subject<void> = new Subject<void>();
 
  public ngOnInit(): void {
-   WebcamUtil.getAvailableVideoInputs()
-     .then((mediaDevices: MediaDeviceInfo[]) => {});
+  this.getPastImages();
+  WebcamUtil.getAvailableVideoInputs()
+    .then((mediaDevices: MediaDeviceInfo[]) => {});
  }
 
  public triggerSnapshot(): void {
@@ -58,9 +61,31 @@ export class AppComponent implements OnInit{
    this.uploadToAPI(webcamImage.imageAsBase64);
  }
 
+ public getPastImages(): void {
+  const httpOptions = {
+    headers: new HttpHeaders({
+      'Authorization': 'Basic ' + btoa('dhbw-demo:dhbw-demo')
+    })
+  };
+
+  this.http.get<string[]>('https://cloud-backend.dullmer.de/PastImages', httpOptions).subscribe(data => {
+    data.forEach(element => {
+      var newObj = {image: `https://cloud-backend.dullmer.de/PastImages/${element}/Image`,
+      thumbImage: `https://cloud-backend.dullmer.de/PastImages/${element}/Image`};
+      this.pastImages.push(newObj);
+    });
+  })
+}
+
+public displayPastImage(index: number) {
+  console.log("Loading past image");
+  // TODO implement loading
+}
+
  public uploadToAPI(imageBase64: string): void {
 
-  const httpOptions = {
+  var httpOptions: object = {
+    observe: 'response',
     headers: new HttpHeaders({
       'Authorization': 'Basic ' + btoa('dhbw-demo:dhbw-demo')
     })
@@ -68,13 +93,20 @@ export class AppComponent implements OnInit{
 
   this.loading = true;
 
-  this.http.post<any>('https://cloud-backend.dullmer.de/Analyze', imageBase64, httpOptions).subscribe(data => {
-    if (data.length == 0) {
+  this.http.post<any>('https://cloud-backend.dullmer.de/Analyze', imageBase64, httpOptions)
+  .subscribe(data => {
+    var body: VisionApiModel[] = data.body as Array<VisionApiModel>;
+    if (body.length == 0) {
       console.log("Kein Gesicht gefunden!");
       return;
     }
     this.loading = false;
-    this.faceInfo = data[0];
+    this.faceInfo = body[0];
+    let guid = data.headers.get('backendguid')!;
+    let newObj = {
+      image: `https://cloud-backend.dullmer.de/PastImages/${guid}/Image`,
+      thumbImage: `https://cloud-backend.dullmer.de/PastImages/${guid}/Image`};
+    this.pastImages.unshift(newObj);
   })
  }
 

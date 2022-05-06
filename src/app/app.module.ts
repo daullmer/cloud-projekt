@@ -11,11 +11,14 @@ import { AiResultComponent } from './ai-result/ai-result.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GalleryComponent } from './gallery/gallery.component';
+import { NgImageSliderModule } from 'ng-image-slider';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AiResultComponent
+    AiResultComponent,
+    GalleryComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +28,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     WebcamModule,
     FlexLayoutModule,
     MatProgressSpinnerModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgImageSliderModule
   ],
   providers: [HttpClientModule],
   bootstrap: [AppComponent]

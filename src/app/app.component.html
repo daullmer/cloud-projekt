@@ -55,5 +55,8 @@
   <div class="card-container">
     <img src="{{ImageBaseData}}" alt="Selected Image" height="200" width="200">
   </div>
+
+  <h2>Vergangene Analysen</h2>
+  <app-gallery [pastImages]="pastImages" (imageClick)="displayPastImage($event)"></app-gallery>
 </div>
 <router-outlet></router-outlet>

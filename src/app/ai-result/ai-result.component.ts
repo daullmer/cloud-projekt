@@ -15,7 +15,6 @@ export class AiResultComponent implements OnInit {
   ngOnInit(): void {}
 
   hairNumberToString(number: number): string {
-    console.log(number);
     switch (number) {
       case 0:
         return 'Schwarz';
