@@ -1,76 +1,76 @@
 declare module namespace {
 
-    export interface FaceRectangle {
-        width: number;
-        height: number;
-        left: number;
-        top: number;
-    }
-
-    export interface FacialHair {
-        moustache: number;
-        beard: number;
-        sideburns: number;
-    }
-
-    export interface HeadPose {
-        roll: number;
-        yaw: number;
-        pitch: number;
-    }
-
-    export interface Emotion {
-        anger: number;
-        contempt: number;
-        disgust: number;
-        fear: number;
-        happiness: number;
-        neutral: number;
-        sadness: number;
-        surprise: number;
-    }
-
-    export interface HairColor {
-        color: number;
-        confidence: number;
-    }
-
-    export interface Hair {
-        bald: number;
-        invisible: boolean;
-        hairColor: HairColor[];
-    }
-
-    export interface Makeup {
-        eyeMakeup: boolean;
-        lipMakeup: boolean;
-    }
-
-    export interface FaceAttributes {
-        age: number;
-        gender: number;
-        smile: number;
-        facialHair: FacialHair;
-        glasses: number;
-        headPose: HeadPose;
-        emotion: Emotion;
-        hair: Hair;
-        makeup: Makeup;
-        occlusion?: any;
-        accessories: any[];
-        blur?: any;
-        exposure?: any;
-        noise?: any;
-        mask?: any;
-        qualityForRecognition?: any;
-    }
-
     export interface VisionApiModel {
-        faceId: string;
-        recognitionModel?: any;
-        faceRectangle: FaceRectangle;
-        faceLandmarks?: any;
-        faceAttributes: FaceAttributes;
+        FaceId:           string;
+        RecognitionModel: null;
+        FaceRectangle:    FaceRectangle;
+        FaceLandmarks:    null;
+        FaceAttributes:   FaceAttributes;
+    }
+    
+    export interface FaceAttributes {
+        Age:                   number;
+        Gender:                number;
+        Smile:                 number;
+        FacialHair:            FacialHair;
+        Glasses:               number;
+        HeadPose:              HeadPose;
+        Emotion:               Emotion;
+        Hair:                  Hair;
+        Makeup:                Makeup;
+        Occlusion:             null;
+        Accessories:           any[];
+        Blur:                  null;
+        Exposure:              null;
+        Noise:                 null;
+        Mask:                  null;
+        QualityForRecognition: null;
+    }
+    
+    export interface Emotion {
+        Anger:     number;
+        Contempt:  number;
+        Disgust:   number;
+        Fear:      number;
+        Happiness: number;
+        Neutral:   number;
+        Sadness:   number;
+        Surprise:  number;
+    }
+    
+    export interface FacialHair {
+        Moustache: number;
+        Beard:     number;
+        Sideburns: number;
+    }
+    
+    export interface Hair {
+        Bald:      number;
+        Invisible: boolean;
+        HairColor: HairColor[];
+    }
+    
+    export interface HairColor {
+        Color:      number;
+        Confidence: number;
+    }
+    
+    export interface HeadPose {
+        Roll:  number;
+        Yaw:   number;
+        Pitch: number;
+    }
+    
+    export interface Makeup {
+        EyeMakeup: boolean;
+        LipMakeup: boolean;
+    }
+    
+    export interface FaceRectangle {
+        Width:  number;
+        Height: number;
+        Left:   number;
+        Top:    number;
     }
 
 }

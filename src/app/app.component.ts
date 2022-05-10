@@ -17,7 +17,7 @@ export class AppComponent implements OnInit{
   ImageBaseData:string | ArrayBuffer | null = null;
   loading: boolean = false;
 
-  pastImages: object[] = []
+  pastImages: any[] = []
 
   constructor(private http: HttpClient) { }
 
@@ -54,7 +54,6 @@ export class AppComponent implements OnInit{
    this.errors.push(error);
  }
 
-
  public handleImage(webcamImage: WebcamImage): void {
    console.info('received webcam image', webcamImage);
    this.image = webcamImage.imageAsDataUrl;
@@ -78,8 +77,28 @@ export class AppComponent implements OnInit{
 }
 
 public displayPastImage(index: number) {
-  console.log("Loading past image");
-  // TODO implement loading
+  console.log("Loading past image; index:", index);
+  console.log(this.pastImages[index]);
+  var obj = this.pastImages[index];
+  this.image = obj["image"];
+  //https://cloud-backend.dullmer.de/PastImages/4asdf-asdf/VisionResult
+
+  var httpOptions: object = {
+    headers: new HttpHeaders({
+      'Authorization': 'Basic ' + btoa('dhbw-demo:dhbw-demo')
+    })
+  };
+
+  var url = this.image.replace("/Image", "/Vision");
+  this.http.get<Array<any>>(url, httpOptions).subscribe(data => {
+    if (data.length == 0) {
+      console.log("Kein Gesicht gefunden!");
+      return;
+    }
+    console.log(data[0]["FaceAttributes"]);
+    this.faceInfo = data[0];
+    console.log(this.faceInfo.FaceAttributes.Age);
+  });
 }
 
  public uploadToAPI(imageBase64: string): void {
@@ -102,6 +121,7 @@ public displayPastImage(index: number) {
     }
     this.loading = false;
     this.faceInfo = body[0];
+    console.log(this.faceInfo);
     let guid = data.headers.get('backendguid')!;
     let newObj = {
       image: `https://cloud-backend.dullmer.de/PastImages/${guid}/Image`,
@@ -120,7 +140,7 @@ public displayPastImage(index: number) {
     let image = reader.readAsDataURL(file);
 	
     reader.onload = function () {
-      console.log(reader.result);
+      //console.log(reader.result);
       me.ImageBaseData=reader.result;  
 	  me.image =  me.ImageBaseData!.toString();
     };
