@@ -33,7 +33,7 @@ export class AppComponent implements OnInit{
 
  // latest snapshot
  public webcamImage: WebcamImage = {} as WebcamImage;
-
+ public image: string = "";
  // webcam snapshot trigger
  private trigger: Subject<void> = new Subject<void>();
 
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit{
 
  public handleImage(webcamImage: WebcamImage): void {
    console.info('received webcam image', webcamImage);
-   this.webcamImage = webcamImage;
+   this.image = webcamImage.imageAsDataUrl;
    this.uploadToAPI(webcamImage.imageAsBase64);
  }
 
@@ -75,11 +75,10 @@ export class AppComponent implements OnInit{
       console.log("Kein Gesicht gefunden!");
       return;
     }
+	console.log(data);
     this.faceInfo = data[0];
   })
  }
-
-
  public get triggerObservable(): Observable<void> {
    return this.trigger.asObservable();
  }
@@ -88,10 +87,12 @@ export class AppComponent implements OnInit{
     const file: File = event.target.files[0];
     let me = this;
     let reader = new FileReader();
-    reader.readAsDataURL(file);
+    let image = reader.readAsDataURL(file);
+	
     reader.onload = function () {
       console.log(reader.result);
-      me.ImageBaseData=reader.result;
+      me.ImageBaseData=reader.result;  
+	  me.image =  me.ImageBaseData!.toString();
     };
     reader.onerror = function (error) {
       console.log('Error: ', error);
@@ -105,27 +106,12 @@ export class AppComponent implements OnInit{
       var fileUplodVM: FileUplodVM={
         ImageBaseData:this.ImageBaseData.toString()
       }
-      this.CreateItem(fileUplodVM).subscribe((res: any) =>{ 
-        if(res){
-          alert("Successfully uploded file");
-        }else{
-          alert("File upload failed");
-        }
-        
-      },
-      error => {
-        alert(error.message);
-      });
-    }
+	  console.log(this.ImageBaseData.toString());
+	  let temp = this.ImageBaseData.toString().split(',');
+	  console.log(temp[1]);
+      this.uploadToAPI(temp[1]);
+	}
   }
-  public CreateItem(data: any) {
-	return this.http.post(`http://localhost:52410/api/Order/UploadFile`, data)
-	 .pipe(
-	   map((res: any) => {
-		 console.log(res);
-		 return res;
-	   }));
-   }
 }
   export class FileUplodVM{
 	  ImageBaseData: string = "";

@@ -338,9 +338,9 @@
       <br/>
     </div>
   </div>
-  <div class="snapshot" *ngIf="webcamImage">
+  <div class="snapshot" *ngIf="image">
     <h2>Nice one!</h2>
-    <img [src]="webcamImage.imageAsDataUrl"/>
+    <img [src]="image" alt="Selected Image" height="200" />
   </div>
   <div class="snapshot" *ngIf="faceInfo">
     <h2>Info about image:</h2>
@@ -362,8 +362,6 @@
     <input type="file" id="FUImage" name="FUImage" accept=".png, .jpg, .jpeg" (change)="handleFileInput($event)"> 
     <button type="button" class="btn btn-danger pull-left" (click)="btnUpload()">Upload</button> 
   </div>
-  <div class="card-container">
-    <img src="{{ImageBaseData}}" alt="Selected Image" height="200" width="200">
-  </div>
+  
 </div>
 <router-outlet></router-outlet>
