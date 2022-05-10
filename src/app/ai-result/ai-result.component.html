@@ -1,0 +1,38 @@
+<h2>AI Ergebnis:</h2>
+<div *ngIf="loading" fxLayout="row" fxLayoutAlign="center center" style="height: 100%;">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="result" fxLayout="row">
+  <div style="margin: 1rem;">
+    <h4>Allgemein</h4>
+    <div>Alter: {{result.faceAttributes.age}}</div>
+    <div>Geschlecht: {{result.faceAttributes.gender ? "weiblich" : "männlich"}}</div>
+    <div>Brille: {{result.faceAttributes.age ? "ja" : "nein"}}</div>
+
+    <h4>Bart</h4>
+    <div>Bart: {{result.faceAttributes.facialHair.beard}}</div>
+    <div>Schnurrbart: {{result.faceAttributes.facialHair.moustache}}</div>
+    <div>Kotletten: {{result.faceAttributes.facialHair.sideburns}}</div>
+
+    <h4>Haare</h4>
+    <div>Glatze: {{result.faceAttributes.hair.bald}}</div>
+    <div>Haarfarbe: {{
+      hairNumberToString(result.faceAttributes.hair.hairColor[0].color)
+      }} zu {{result.faceAttributes.hair.hairColor[0].confidence * 100}} %</div>
+  </div>
+  <div style="margin: 1rem;">
+    <h4>Emotionen</h4>
+    <div>Wut: {{result.faceAttributes.emotion.anger}}</div>
+    <div>Verachtung: {{result.faceAttributes.emotion.contempt}}</div>
+    <div>Ekel: {{result.faceAttributes.emotion.disgust}}</div>
+    <div>Angst: {{result.faceAttributes.emotion.fear}}</div>
+    <div>Glücklich: {{result.faceAttributes.emotion.happiness}}</div>
+    <div>Neutral: {{result.faceAttributes.emotion.neutral}}</div>
+    <div>Traurig: {{result.faceAttributes.emotion.sadness}}</div>
+    <div>Überrascht: {{result.faceAttributes.emotion.surprise}}</div>
+
+    <h4>Makeup</h4>
+    <div>Augen: {{result.faceAttributes.makeup.eyeMakeup ? "ja" : "nein"}}</div>
+    <div>Lippen: {{result.faceAttributes.makeup.lipMakeup ? "ja" : "nein"}}</div>
+  </div>
+</div>
